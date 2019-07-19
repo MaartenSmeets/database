@@ -1,0 +1,59 @@
+#First create a user which you will use to connect to from the Spring Boot application
+create user testuser identified by Welcome01;
+grant connect,resource,dba to testuser;
+
+#Add the JDBC driver to your local repository
+Download https://www.oracle.com/technetwork/database/application-development/jdbc/downloads/jdbc-ucp-19c-5460552.html
+ojdbc8.jar
+mvn install:install-file -Dfile=ojdbc8.jar -DgroupId=com.oracle -artifactId=ojdbc8 -Dversion=19.3 -Dpackaging=jar
+
+#Create the required database code under the relevant user
+
+CREATE OR REPLACE TYPE HTTP_HEADER_TYPE AS OBJECT
+(
+name VARCHAR2(255),
+value VARCHAR2(2014)
+);
+/
+CREATE OR REPLACE TYPE HTTP_HEADERS_TYPE AS TABLE OF HTTP_HEADER_TYPE;
+/
+CREATE OR REPLACE TYPE REST_REQUEST_TYPE AS OBJECT
+(
+HTTP_METHOD VARCHAR2(16),
+HTTP_URL VARCHAR2(1024),
+HTTP_HEADERS HTTP_HEADERS_TYPE,
+HTTP_BODY CLOB
+);
+/
+CREATE OR REPLACE TYPE REST_RESPONSE_TYPE AS OBJECT
+(
+HTTP_STATUSCODE NUMBER,
+HTTP_HEADERS HTTP_HEADERS_TYPE,
+HTTP_BODY CLOB
+);
+/
+CREATE OR REPLACE PACKAGE gen_rest AS
+    PROCEDURE dispatcher (
+        p_request    IN    rest_request_type,
+        p_response   OUT   rest_response_type
+    );
+
+END gen_rest;
+/
+CREATE OR REPLACE PACKAGE BODY gen_rest AS
+
+    PROCEDURE dispatcher (
+        p_request    IN    rest_request_type,
+        p_response   OUT   rest_response_type
+    ) AS
+        l_httpheader    http_header_type;
+        l_httpheaders   http_headers_type := http_headers_type();
+    BEGIN
+        l_httpheader := http_header_type('Content-Type', 'application/json');
+        l_httpheaders.extend;
+        l_httpheaders(l_httpheaders.count) := l_httpheader;
+        p_response := rest_response_type(200, l_httpheaders, '{"response":"Hello World"}');
+    END dispatcher;
+
+END gen_rest;
+
