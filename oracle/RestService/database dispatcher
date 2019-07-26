@@ -5,7 +5,7 @@ grant connect,resource,dba to testuser;
 #Add the JDBC driver to your local repository
 Download https://www.oracle.com/technetwork/database/application-development/jdbc/downloads/jdbc-ucp-19c-5460552.html
 ojdbc8.jar
-mvn install:install-file -Dfile=ojdbc8.jar -DgroupId=com.oracle -artifactId=ojdbc8 -Dversion=19.3 -Dpackaging=jar
+ mvn install:install-file -Dfile="ojdbc8.jar" -DgroupId="com.oracle" -DartifactId=ojdbc8 -Dversion="19.3" -Dpackaging=jar
 
 #Create the required database code under the relevant user
 
