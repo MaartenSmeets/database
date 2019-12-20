@@ -1,6 +1,10 @@
 //in /etc/rsyslog.conf uncomment
 //$ModLoad imudp
 //$UDPServerRun 514
+
+//for function:
+select SYSLOGGER('127.0.0.1', 514, 'syslogtest', 1, 5, 'Hello there') from dual;
+//for procedure
 DECLARE
   P_HOSTNAME VARCHAR2(200);
   P_PORT NUMBER;
