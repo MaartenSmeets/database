@@ -243,8 +243,8 @@ public class Syslog {
 }
 /
 create or replace
-procedure SYSLOGGER(p_hostname in varchar2, p_port in number, p_ident in varchar2, p_facility in number, p_priority in number, p_msg in varchar2)
+function SYSLOGGER(p_hostname in varchar2, p_port in number, p_ident in varchar2, p_facility in number, p_priority in number, p_msg in varchar2) return varchar2
 as
 language java
-name 'Syslog.syslog(java.lang.String,java.lang.Integer,java.lang.String,java.lang.Integer,java.lang.Integer,java.lang.String)';
+name 'Syslog.syslog(java.lang.String,java.lang.Integer,java.lang.String,java.lang.Integer,java.lang.Integer,java.lang.String) return java.lang.String';
 /
